@@ -11,13 +11,26 @@ jobs:
     name: hello jobs
     runs-on: ubuntu-latest
     steps:
-    - run: echo "hello"
-    
-BE-build-test-package:
+      - run: echo "hello"
+      
+  BE-build-test-package:
     name: BE Build & Test & Package
     runs-on: ubuntu-latest
 
-    
+    services:
+          postgres:
+            image: postgres:16
+            env:
+              POSTGRES_DB: measdb
+              POSTGRES_USER: postgres
+              POSTGRES_PASSWORD: postgres
+            options: >-
+              --health-cmd pg_isready
+              --health-interval 10s
+              --health-timeout 5s
+              --health-retries 5
+            ports:
+              - 5432:5432
 
     steps:
       - uses: actions/checkout@v3
@@ -32,25 +45,11 @@ BE-build-test-package:
       - name: Build and test with Maven
         run: mvn -B package --file pom.xml -Dquarkus.datasource.reactive.url=vertx-reactive:postgresql://localhost:5432/measdb
         working-directory: backend
+        
+      - name: Upload resulting Build package
+        uses: actions/upload-artifact@v4
+        with:
+          name: Package
+          path: backend/target
 
-services:
-      postgres:
-        image: postgres:16
-        env:
-          POSTGRES_DB: measdb
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          - 5432:5432
-          
-- name: Upload resulting Build package
-  uses: actions/upload-artifact@v4
-  with:
-    name: Package
-    path: backend/target
     
