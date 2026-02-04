@@ -16,7 +16,7 @@ BE-build-test-package:
     name: BE Build & Test & Package
     runs-on: ubuntu-latest
 
-    <TODO service container>
+    
 
     steps:
       - uses: actions/checkout@v3
