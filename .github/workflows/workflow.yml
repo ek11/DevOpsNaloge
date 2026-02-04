@@ -7,3 +7,6 @@ on:
     branches: [ "**" ]
 
 jobs:
+hello:
+name: hello jobs
+
