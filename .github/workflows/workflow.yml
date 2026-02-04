@@ -9,4 +9,6 @@ on:
 jobs:
 hello:
 name: hello jobs
-
+runs-on: ubuntu-lastest
+steps:
+- run: echo "hello"
